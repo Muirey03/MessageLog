@@ -1,0 +1,9 @@
+Package: com.muirey03.messagelog
+Name: MessageLog
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: A simple library to log all objc_msgSend calls
+Maintainer: Muirey03
+Author: Muirey03
+Section: Tweaks
