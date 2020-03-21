@@ -5,7 +5,7 @@ MessageLog is a small library to log Objective-C method calls. It can be used to
 
 ## Usage
 
-First copy `MessageLog.h` to `$THEOS/include`, then copy `usr/lib/libmessagelog.dylib` to `$THEOS/lib`. You can then add `XXX_LIBRARIES = messagelog` to the Makefile of any project you want to use it, and `#import <MessageLog.h>` to source files you want to use it in.
+First copy `MessageLog.h` to `$THEOS/include`, then copy `usr/lib/libmessagelog.dylib` to `$THEOS/lib`. You can then add `XXX_LIBRARIES = messagelog` to the Makefile of any project you want to use it, and `#import <MessageLog.h>` to source files you want to use it in. Ensure the library is installed on any devices you try to use it on.
 
 ### Enabling logs for all methods:
 
