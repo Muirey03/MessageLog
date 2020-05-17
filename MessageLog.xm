@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <regex.h>
+#include <substrate.h>
 #import "MessageLog.h"
 
 static void openLogFile(void);
@@ -120,6 +121,7 @@ static void flushCaches()
 {
 	if (loggingEnabled && inst && sel)
 	{
+		loggingEnabled = false;
 		//don't cache anything when we're logging
 		cache = false;
 
@@ -136,16 +138,17 @@ static void flushCaches()
 			match = (regexec(matchSelRegex, selName, 0, NULL, 0) == 0);
 
 		if (match)
-		{
-			loggingEnabled = false;
 			MLLoggerFunc(isCls, clsName ?: "<null>", selName ?: "<null>");
-			loggingEnabled = true;
-		}
+		loggingEnabled = true;
 	}
 	return %orig;
 }
 
 %ctor
 {
-	lookUpImpOrForwardPtr = (IMP (*)(Class, SEL, id, bool, bool, bool))MSFindSymbol(MSGetImageByName("/usr/lib/libobjc.A.dylib"), "_lookUpImpOrForward");
+	@autoreleasepool
+	{
+		lookUpImpOrForwardPtr = (IMP (*)(Class, SEL, id, bool, bool, bool))MSFindSymbol(MSGetImageByName("/usr/lib/libobjc.A.dylib"), "_lookUpImpOrForward");
+		%init;
+	}
 }

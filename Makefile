@@ -4,7 +4,6 @@ include $(THEOS)/makefiles/common.mk
 
 LIBRARY_NAME = libmessagelog
 libmessagelog_FILES = MessageLog.xm
-libmessagelog_CFLAGS = -fobjc-arc
 libmessagelog_LIBRARIES = substrate
 ADDITIONAL_CFLAGS = -DTHEOS_LEAN_AND_MEAN
 
