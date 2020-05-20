@@ -4,6 +4,7 @@
 #include <sstream>
 #include <regex.h>
 #include <substrate.h>
+#include <pthread.h>
 #import "MessageLog.h"
 
 static void openLogFile(void);
@@ -18,7 +19,7 @@ static bool loggingEnabled = false;
 static MLMethodType matchType = MLMethodTypeAny;
 static regex_t* matchClassRegex = nullptr;
 static regex_t* matchSelRegex = nullptr;
-static pid_t inspectedTid = -1;
+static pthread_t inspectedThread = NULL;
 
 extern "C"
 {
@@ -88,11 +89,11 @@ extern "C"
 
 	void MLLogBlock(void(^block)(void))
 	{
-		inspectedTid = gettid();
+		inspectedThread = pthread_self();
 		MLSetFullLoggingEnabled(true);
 		block();
 		MLSetFullLoggingEnabled(false);
-		inspectedTid = -1;
+		inspectedThread = NULL;
 	}
 }
 
@@ -129,7 +130,7 @@ static void flushCaches()
 
 %hookf (IMP, lookUpImpOrForwardPtr, Class cls, SEL sel, id inst, bool initialize, bool cache, bool resolver)
 {
-	if (loggingEnabled && (inspectedTid <= 0 || inspectedTid == gettid()) && inst && sel)
+	if (loggingEnabled && (!inspectedThread || inspectedThread == pthread_self()) && inst && sel)
 	{
 		loggingEnabled = false;
 		//don't cache anything when we're logging
