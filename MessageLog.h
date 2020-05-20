@@ -26,6 +26,9 @@ void MLEnableSelectiveLogging(MLMethodType type, const char* classRegex, const c
 // Disable selective logging
 void MLDisableSelectiveLogging(void);
 
+// Log methods called by a block of code
+void MLLogBlock(void(^block)(void));
+
 #ifdef __cplusplus
 }
 #endif

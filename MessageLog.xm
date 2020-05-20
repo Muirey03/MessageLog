@@ -18,6 +18,7 @@ static bool loggingEnabled = false;
 static MLMethodType matchType = MLMethodTypeAny;
 static regex_t* matchClassRegex = nullptr;
 static regex_t* matchSelRegex = nullptr;
+static pid_t inspectedTid = -1;
 
 extern "C"
 {
@@ -84,13 +85,22 @@ extern "C"
 	{
 		MLSetFullLoggingEnabled(false);
 	}
+
+	void MLLogBlock(void(^block)(void))
+	{
+		inspectedTid = gettid();
+		MLSetFullLoggingEnabled(true);
+		block();
+		MLSetFullLoggingEnabled(false);
+		inspectedTid = -1;
+	}
 }
 
 static void openLogFile()
 {
 	if (logFile) return;
 	std::stringstream ss;
-	ss << "/tmp/objcMessages~" << getprogname() << "_" << getpid() << ".txt";
+	ss << "/tmp/MessageLog/objcMessages~" << getprogname() << "_" << getpid() << ".txt";
 	std::string filenameStr = ss.str();
 	logFile = fopen(filenameStr.c_str(), "a");
 	NSLog(@"[MobileLogger] Logging started to %s", filenameStr.c_str());
@@ -119,7 +129,7 @@ static void flushCaches()
 
 %hookf (IMP, lookUpImpOrForwardPtr, Class cls, SEL sel, id inst, bool initialize, bool cache, bool resolver)
 {
-	if (loggingEnabled && inst && sel)
+	if (loggingEnabled && (inspectedTid <= 0 || inspectedTid == gettid()) && inst && sel)
 	{
 		loggingEnabled = false;
 		//don't cache anything when we're logging
