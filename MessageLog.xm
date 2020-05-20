@@ -130,7 +130,7 @@ static void flushCaches()
 
 %hookf (IMP, lookUpImpOrForwardPtr, Class cls, SEL sel, id inst, bool initialize, bool cache, bool resolver)
 {
-	if (loggingEnabled && (!inspectedThread || inspectedThread == pthread_self()) && inst && sel)
+	if (loggingEnabled && (!inspectedThread || pthread_equal(inspectedThread, pthread_self())) && inst && sel)
 	{
 		loggingEnabled = false;
 		//don't cache anything when we're logging
