@@ -101,7 +101,7 @@ static void openLogFile()
 {
 	if (logFile) return;
 	std::stringstream ss;
-	ss << "/tmp/MessageLog/objcMessages~" << getprogname() << "_" << getpid() << ".txt";
+	ss << "/tmp/MessageLog/objcMessages~" << getprogname() << "_" << time(NULL) << ".txt";
 	std::string filenameStr = ss.str();
 	logFile = fopen(filenameStr.c_str(), "a");
 	NSLog(@"[MobileLogger] Logging started to %s", filenameStr.c_str());

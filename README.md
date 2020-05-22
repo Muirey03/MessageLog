@@ -1,7 +1,7 @@
 # MessageLog
 ### A simple library to log all objc_msgSend calls
 
-MessageLog is a small library to log Objective-C method calls. It can be used to either log all messages, or to filter messages based off regular expressions, and even to implement your own logging functions. The default log location is `/tmp/MessageLog/objcMessages~<processname>_<pid>.txt`.
+MessageLog is a small library to log Objective-C method calls. It can be used to either log all messages, or to filter messages based off regular expressions, and even to implement your own logging functions. The default log location is `/tmp/MessageLog/objcMessages~<processname>_<time>.txt`.
 
 ## Usage
 
